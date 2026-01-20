@@ -38,6 +38,12 @@
   
   --nav-height: 70px;
   --player-bar-height: 90px;
+  
+  /* iOS safe areas */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
 }
 
 /* ===== Reset & Base ===== */
@@ -50,6 +56,15 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent text selection on controls */
+button, .btn, .progress-bar, .volume-slider, .nav-link {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -95,7 +110,8 @@ a:hover {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-bottom: var(--player-bar-height);
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  padding-bottom: calc(var(--player-bar-height) + var(--safe-area-inset-bottom));
 }
 
 .main-content {
@@ -208,10 +224,13 @@ a:hover {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border-color);
-  height: var(--player-bar-height);
+  height: calc(var(--player-bar-height) + var(--safe-area-inset-bottom));
   display: flex;
   align-items: center;
   padding: 0 24px;
+  padding-bottom: var(--safe-area-inset-bottom);
+  padding-left: calc(24px + var(--safe-area-inset-left));
+  padding-right: calc(24px + var(--safe-area-inset-right));
   gap: 20px;
 }
 
@@ -514,9 +533,15 @@ a:hover {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  /* Larger touch target */
+  padding: 10px 0;
+  margin: -10px 0;
+  background-clip: content-box;
+  touch-action: none; /* Prevent scroll while dragging */
 }
 
-.progress-bar:hover {
+.progress-bar:hover,
+.progress-bar:active {
   height: 8px;
 }
 
@@ -560,12 +585,18 @@ a:hover {
   border-radius: 3px;
   cursor: pointer;
   position: relative;
+  /* Larger touch target */
+  padding: 10px 0;
+  margin: -10px 0;
+  background-clip: content-box;
+  touch-action: none;
 }
 
 .volume-fill {
   height: 100%;
   background: var(--accent);
   border-radius: 3px;
+  pointer-events: none;
 }
 
 /* ===== Form Elements ===== */
@@ -951,21 +982,33 @@ a:hover {
   
   .main-content {
     padding: 16px;
+    padding-left: calc(16px + var(--safe-area-inset-left));
+    padding-right: calc(16px + var(--safe-area-inset-right));
   }
   
   .nav-content {
     padding: 0 16px;
+    padding-left: calc(16px + var(--safe-area-inset-left));
+    padding-right: calc(16px + var(--safe-area-inset-right));
+  }
+  
+  .nav-bar {
+    padding-top: var(--safe-area-inset-top);
+    height: calc(var(--nav-height) + var(--safe-area-inset-top));
   }
   
   .nav-links {
     position: fixed;
-    top: var(--nav-height);
+    top: calc(var(--nav-height) + var(--safe-area-inset-top));
     left: 0;
     right: 0;
     background: rgba(13, 13, 13, 0.95);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     flex-direction: column;
     padding: 16px;
+    padding-left: calc(16px + var(--safe-area-inset-left));
+    padding-right: calc(16px + var(--safe-area-inset-right));
     gap: 8px;
     border-bottom: 1px solid var(--border-color);
     transform: translateY(-100%);
@@ -991,6 +1034,9 @@ a:hover {
   
   .player-bar {
     padding: 0 16px;
+    padding-bottom: var(--safe-area-inset-bottom);
+    padding-left: calc(16px + var(--safe-area-inset-left));
+    padding-right: calc(16px + var(--safe-area-inset-right));
   }
   
   .player-bar-progress {
@@ -1009,6 +1055,17 @@ a:hover {
     opacity: 1;
   }
   
+  /* Larger touch targets on mobile */
+  .btn-icon {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  
+  .btn-icon.sm {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
   .page-header {
     flex-direction: column;
     align-items: flex-start;
@@ -1020,14 +1077,28 @@ a:hover {
   
   .page-actions .btn {
     flex: 1;
+    min-height: 48px;
   }
   
   .now-playing-art {
     max-width: 300px;
   }
   
+  /* Larger progress bar on mobile for easier touch */
+  .now-playing-progress .progress-bar {
+    height: 8px;
+    padding: 16px 0;
+    margin: -16px 0;
+  }
+  
   h1 { font-size: 1.75rem; }
   h2 { font-size: 1.5rem; }
+  
+  /* Better input sizing on mobile */
+  .input {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    min-height: 48px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1037,13 +1108,15 @@ a:hover {
   }
   
   .track-item {
-    padding: 10px 12px;
+    padding: 12px;
     gap: 12px;
+    /* Minimum touch target height */
+    min-height: 64px;
   }
   
   .track-art {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
   
   .track-number {
@@ -1057,6 +1130,28 @@ a:hover {
   
   .now-playing-title {
     font-size: 1.375rem;
+  }
+  
+  /* Larger controls on small screens */
+  .now-playing-controls .btn-icon.lg {
+    width: 72px;
+    height: 72px;
+  }
+  
+  .now-playing-controls .btn-icon.lg svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Toast positioning */
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: calc(var(--player-bar-height) + var(--safe-area-inset-bottom) + 16px);
+  }
+  
+  .toast {
+    width: 100%;
   }
 }
 

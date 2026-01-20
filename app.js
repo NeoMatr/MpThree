@@ -144,6 +144,65 @@ function showToast(message, type = 'info') {
   }, 3000);
 }
 
+/**
+ * Setup slider with mouse and touch support
+ */
+function setupSlider(element, onChange) {
+  if (!element) return;
+  
+  const getPercent = (clientX) => {
+    const rect = element.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  };
+  
+  // Mouse events
+  element.addEventListener('click', (e) => {
+    onChange(getPercent(e.clientX));
+  });
+  
+  let isDragging = false;
+  
+  element.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    onChange(getPercent(e.clientX));
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      onChange(getPercent(e.clientX));
+    }
+  });
+  
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+  
+  // Touch events for mobile
+  element.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    const touch = e.touches[0];
+    onChange(getPercent(touch.clientX));
+    e.preventDefault();
+  }, { passive: false });
+  
+  element.addEventListener('touchmove', (e) => {
+    if (isDragging) {
+      const touch = e.touches[0];
+      onChange(getPercent(touch.clientX));
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  element.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+  
+  element.addEventListener('touchcancel', () => {
+    isDragging = false;
+  });
+}
+
 function createModal(title, content, footer = '') {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -629,20 +688,14 @@ function initNowPlaying() {
   document.getElementById('shuffleBtn').addEventListener('click', () => window.player.toggleShuffle());
   document.getElementById('repeatBtn').addEventListener('click', () => window.player.cycleRepeat());
   
-  // Progress bar
+  // Progress bar with touch support
   const progressBar = document.getElementById('progressBar');
-  progressBar.addEventListener('click', (e) => {
-    const rect = progressBar.getBoundingClientRect();
-    window.player.seekTo((e.clientX - rect.left) / rect.width);
-  });
+  setupSlider(progressBar, (percent) => window.player.seekTo(percent));
   
-  // Volume
+  // Volume with touch support
   document.getElementById('volumeBtn').addEventListener('click', () => window.player.toggleMute());
   const volumeSlider = document.getElementById('volumeSlider');
-  volumeSlider.addEventListener('click', (e) => {
-    const rect = volumeSlider.getBoundingClientRect();
-    window.player.setVolume((e.clientX - rect.left) / rect.width);
-  });
+  setupSlider(volumeSlider, (percent) => window.player.setVolume(percent));
   
   // Queue toggle
   document.getElementById('queueBtn').addEventListener('click', () => {
@@ -1194,20 +1247,14 @@ function initPlayerBar() {
   document.getElementById('playerBarPlayPause').addEventListener('click', () => window.player.togglePlay());
   document.getElementById('playerBarNext').addEventListener('click', () => window.player.next());
   
-  // Progress bar
-  const progressBar = document.getElementById('playerBarProgress');
-  progressBar.addEventListener('click', (e) => {
-    const rect = progressBar.getBoundingClientRect();
-    window.player.seekTo((e.clientX - rect.left) / rect.width);
-  });
+  // Progress bar with touch support
+  const progressBarPlayerBar = document.getElementById('playerBarProgress');
+  setupSlider(progressBarPlayerBar, (percent) => window.player.seekTo(percent));
   
-  // Volume
+  // Volume with touch support
   document.getElementById('playerBarVolumeBtn').addEventListener('click', () => window.player.toggleMute());
-  const volumeSlider = document.getElementById('playerBarVolumeSlider');
-  volumeSlider.addEventListener('click', (e) => {
-    const rect = volumeSlider.getBoundingClientRect();
-    window.player.setVolume((e.clientX - rect.left) / rect.width);
-  });
+  const volumeSliderPlayerBar = document.getElementById('playerBarVolumeSlider');
+  setupSlider(volumeSliderPlayerBar, (percent) => window.player.setVolume(percent));
   
   // Click player bar to go to now playing
   document.getElementById('playerBarArt').addEventListener('click', () => switchView('now-playing'));

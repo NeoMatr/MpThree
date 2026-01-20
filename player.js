@@ -9,6 +9,10 @@ class AudioPlayer {
     this.audio = new Audio();
     this.audio.preload = 'metadata';
     
+    // Enable background playback on mobile
+    this.audio.setAttribute('playsinline', '');
+    this.audio.setAttribute('webkit-playsinline', '');
+    
     // State
     this.currentTrack = null;
     this.queue = [];
@@ -23,6 +27,9 @@ class AudioPlayer {
     // Object URLs that need cleanup
     this.currentAudioUrl = null;
     this.currentArtworkUrl = null;
+    
+    // Wake lock for keeping screen on during playback
+    this.wakeLock = null;
     
     // Bind event handlers
     this._onTimeUpdate = this._onTimeUpdate.bind(this);
@@ -477,6 +484,7 @@ class AudioPlayer {
     if (window.MediaSessionManager) {
       window.MediaSessionManager.setPlaybackState('playing');
     }
+    this._requestWakeLock();
     this._emitStateChange();
   }
   
@@ -485,8 +493,36 @@ class AudioPlayer {
     if (window.MediaSessionManager) {
       window.MediaSessionManager.setPlaybackState('paused');
     }
+    this._releaseWakeLock();
     this._saveStateDebounced();
     this._emitStateChange();
+  }
+  
+  /**
+   * Request wake lock to keep screen on during playback (optional)
+   */
+  async _requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      try {
+        this.wakeLock = await navigator.wakeLock.request('screen');
+        this.wakeLock.addEventListener('release', () => {
+          this.wakeLock = null;
+        });
+      } catch (err) {
+        // Wake lock not supported or failed - continue without it
+        console.log('Wake lock not available:', err.message);
+      }
+    }
+  }
+  
+  /**
+   * Release wake lock when paused
+   */
+  _releaseWakeLock() {
+    if (this.wakeLock) {
+      this.wakeLock.release();
+      this.wakeLock = null;
+    }
   }
   
   _onError(e) {

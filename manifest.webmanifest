@@ -3,8 +3,10 @@
   "short_name": "MpThree",
   "description": "A local MP3 player for your music collection. Import your MP3s, create playlists, and enjoy your music with background playback support.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
   "background_color": "#08080c",
   "theme_color": "#08080c",
   "categories": ["music", "entertainment"],
@@ -16,8 +18,9 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
-  "related_applications": [],
-  "prefer_related_applications": false
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
 
