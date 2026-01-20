@@ -794,8 +794,7 @@ function initPlaylists() {
       // Show image immediately using local URL
       const localUrl = URL.createObjectURL(file);
       const artContainer = document.getElementById('playlistDetailArt');
-      artContainer.innerHTML = `<img src="${localUrl}" alt="Playlist art">`;
-      artContainer.classList.add('has-image');
+      artContainer.innerHTML = `<img src="${localUrl}" alt="Playlist art" style="width: 100%; height: 100%; object-fit: cover;">`;
       
       // Store artwork in background
       const artwork = await DB.addArtwork({
@@ -808,8 +807,9 @@ function initPlaylists() {
       
       // Update with permanent URL and add hover effect
       const permanentUrl = await DB.getArtworkUrl(artwork.id);
-      artContainer.innerHTML = `<img src="${permanentUrl}" alt="Playlist art"><div class="playlist-art-overlay"><span>${Icons.image}</span></div>`;
-      artContainer.classList.add('has-image');
+      artContainer.innerHTML = `<img src="${permanentUrl}" alt="Playlist art" style="width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.2s;"><span style="color: white;">${Icons.image}</span></div>`;
+      artContainer.onmouseenter = () => artContainer.querySelector('div').style.opacity = '1';
+      artContainer.onmouseleave = () => artContainer.querySelector('div').style.opacity = '0';
       
       // Revoke the temporary URL
       URL.revokeObjectURL(localUrl);
@@ -954,15 +954,17 @@ async function showPlaylistDetail(playlistId, keepAddPanel = false) {
   if (playlist.artworkId) {
     const artworkUrl = await DB.getArtworkUrl(playlist.artworkId);
     if (artworkUrl) {
-      artContainer.innerHTML = `<img src="${artworkUrl}" alt="Playlist art"><div class="playlist-art-overlay"><span>${Icons.image}</span></div>`;
-      artContainer.classList.add('has-image');
+      artContainer.innerHTML = `<img src="${artworkUrl}" alt="Playlist art" style="width: 100%; height: 100%; object-fit: cover;"><div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.2s;"><span style="color: white;">${Icons.image}</span></div>`;
+      artContainer.onmouseenter = () => artContainer.querySelector('div').style.opacity = '1';
+      artContainer.onmouseleave = () => artContainer.querySelector('div').style.opacity = '0';
     }
   } else {
-    artContainer.innerHTML = `<div class="playlist-art-placeholder">
+    artContainer.innerHTML = `<div class="playlist-art-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;">
       <span>${Icons.image}</span>
-      <span class="playlist-art-hint">Add art</span>
+      <span style="font-size: 0.625rem; color: var(--text-muted);">Click to add art</span>
     </div>`;
-    artContainer.classList.remove('has-image');
+    artContainer.onmouseenter = null;
+    artContainer.onmouseleave = null;
   }
   
   const tracks = await DB.getPlaylistTracks(playlistId);

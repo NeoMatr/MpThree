@@ -596,7 +596,6 @@ a:hover {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.3-4.3'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: 14px center;
-  background-size: 20px 20px;
 }
 
 /* ===== File Upload Zone ===== */
@@ -1023,26 +1022,8 @@ a:hover {
     flex: 1;
   }
   
-  /* Playlist detail page-actions: smaller icon buttons on mobile */
-  .page-actions .btn-icon {
-    width: 36px;
-    height: 36px;
-    flex: 0 0 auto;
-  }
-  
-  .page-actions .btn-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-  
   .now-playing-art {
     max-width: 300px;
-  }
-  
-  /* Search input padding for mobile */
-  .search-input {
-    padding-left: 40px;
-    background-position: 12px center;
   }
   
   h1 { font-size: 1.75rem; }
@@ -1076,173 +1057,6 @@ a:hover {
   
   .now-playing-title {
     font-size: 1.375rem;
-  }
-  
-  /* Playlist detail improvements for small screens */
-  .page-actions .btn-icon {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .page-actions .btn-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-  
-  /* Keep text buttons normal but smaller */
-  .page-actions .btn:not(.btn-icon) {
-    padding: 8px 14px;
-    font-size: 0.8125rem;
-  }
-  
-  /* Card body padding on mobile */
-  .card-body {
-    padding: 14px;
-  }
-  
-  .card-body h3 {
-    font-size: 1rem;
-  }
-  
-  /* Playlist detail header - keep actions in a row */
-  #playlistDetail .page-header {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  
-  #playlistDetail .page-header h1 {
-    flex: 1;
-    min-width: 0;
-    font-size: 1.25rem;
-  }
-  
-  #playlistDetail .page-header h1 span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-  }
-  
-  #playlistDetail .page-actions {
-    width: auto;
-    flex-shrink: 0;
-  }
-  
-  #playlistDetail .page-actions .btn {
-    flex: 0 0 auto;
-  }
-  
-  /* Add tracks panel on mobile */
-  #addTracksPanel {
-    margin-top: 16px;
-  }
-  
-  #addTracksList {
-    max-height: 250px !important;
-  }
-}
-
-/* ===== Playlist Detail Styles ===== */
-.playlist-detail-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.playlist-detail-art-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.playlist-detail-art {
-  width: 100px;
-  height: 100px;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  background: var(--bg-tertiary);
-  cursor: pointer;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.playlist-detail-art img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.playlist-art-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 4px;
-  color: var(--text-muted);
-  transition: background var(--transition-fast);
-}
-
-.playlist-detail-art:hover .playlist-art-placeholder {
-  background: var(--bg-hover);
-}
-
-.playlist-art-placeholder svg {
-  width: 28px;
-  height: 28px;
-}
-
-.playlist-art-hint {
-  font-size: 0.625rem;
-  color: var(--text-muted);
-}
-
-.playlist-art-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-  color: white;
-}
-
-.playlist-art-overlay svg {
-  width: 24px;
-  height: 24px;
-}
-
-.playlist-detail-art:hover .playlist-art-overlay {
-  opacity: 1;
-}
-
-.playlist-detail-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-@media (max-width: 480px) {
-  .playlist-detail-art-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-  }
-  
-  .playlist-detail-art {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .playlist-art-placeholder svg {
-    width: 24px;
-    height: 24px;
   }
 }
 
