@@ -215,15 +215,15 @@
         </div>
         
         <!-- Playlist Art + Info -->
-        <div class="flex gap-4 mb-6" style="align-items: flex-start;">
-          <div class="playlist-detail-art" id="playlistDetailArt" style="width: 120px; height: 120px; border-radius: 12px; overflow: hidden; background: var(--bg-tertiary); cursor: pointer; flex-shrink: 0; position: relative;">
-            <div class="playlist-art-placeholder" id="playlistArtPlaceholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;">
+        <div class="playlist-detail-art-container mb-6">
+          <div class="playlist-detail-art" id="playlistDetailArt">
+            <div class="playlist-art-placeholder" id="playlistArtPlaceholder">
               <span id="playlistArtIcon"></span>
-              <span style="font-size: 0.625rem; color: var(--text-muted);">Click to add art</span>
+              <span class="playlist-art-hint">Add art</span>
             </div>
           </div>
           <input type="file" id="playlistArtInput" accept="image/*" hidden>
-          <div>
+          <div class="playlist-detail-meta">
             <p class="text-secondary" id="playlistDetailCount">0 tracks</p>
           </div>
         </div>
